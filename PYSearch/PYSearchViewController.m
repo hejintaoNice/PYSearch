@@ -136,17 +136,17 @@
     // Adapt the search bar layout problem in the navigation bar on iOS 11
     // More details : https://github.com/iphone5solo/PYSearch/issues/108
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
-        UINavigationBar *navBar = self.navigationController.navigationBar;
-        if (self.navigationItem.rightBarButtonItem) { // Cancel button
-            CGFloat space = 8;
-            navBar.layoutMargins = UIEdgeInsetsZero;
-            for (UIView *subview in navBar.subviews) {
-                if ([NSStringFromClass(subview.class) containsString:@"ContentView"]) {
-                    subview.layoutMargins = UIEdgeInsetsMake(0, space, 0, space); // Fix cancel button width is modified
-                    break;
-                }
-            }
-        }
+//        UINavigationBar *navBar = self.navigationController.navigationBar;
+//        if (self.navigationItem.rightBarButtonItem) { // Cancel button
+//            CGFloat space = 8;
+//            navBar.layoutMargins = UIEdgeInsetsZero;
+//            for (UIView *subview in navBar.subviews) {
+//                if ([NSStringFromClass(subview.class) containsString:@"ContentView"]) {
+//                    subview.layoutMargins = UIEdgeInsetsMake(0, space, 0, space); // Fix cancel button width is modified
+//                    break;
+//                }
+//            }
+//        }
         _searchBar.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN * 4;
         _searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
         _searchTextField.frame = _searchBar.bounds;
@@ -187,7 +187,7 @@
         self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.py_y, 0);
         self.searchSuggestionVC.view.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
         if (!self.navigationController.navigationBar.barTintColor) {
-            self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
+            self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
         }
     }
 }
@@ -358,26 +358,28 @@
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.navigationController.navigationBar.backIndicatorImage = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-    UIButton *cancleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    cancleButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    UIButton *cancleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancleButton.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+    [cancleButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
+
     [cancleButton setTitle:[NSBundle py_localizedStringForKey:PYSearchCancelButtonText] forState:UIControlStateNormal];
     [cancleButton addTarget:self action:@selector(cancelDidClick)  forControlEvents:UIControlEventTouchUpInside];
     [cancleButton sizeToFit];
-    cancleButton.py_width += PYSEARCH_MARGIN;
+    cancleButton.py_width += 20;
     self.cancelButton = cancleButton;
     self.cancelBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancleButton];
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    backButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-    [backButton setTitle:[NSBundle py_localizedStringForKey:PYSearchBackButtonText] forState:UIControlStateNormal];
-    [backButton setImage:[NSBundle py_imageNamed:@"back"] forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(backDidClick)  forControlEvents:UIControlEventTouchUpInside];
-    [backButton sizeToFit];
-    
-    backButton.contentEdgeInsets = UIEdgeInsetsMake(0, -35, 0, -15);
-    backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
-    backButton.py_width -= PYSEARCH_MARGIN;
-    self.backButton = backButton;
-    self.backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    backButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+//    [backButton setTitle:[NSBundle py_localizedStringForKey:PYSearchBackButtonText] forState:UIControlStateNormal];
+//    [backButton setImage:[NSBundle py_imageNamed:@"back"] forState:UIControlStateNormal];
+//    [backButton addTarget:self action:@selector(backDidClick)  forControlEvents:UIControlEventTouchUpInside];
+//    [backButton sizeToFit];
+//
+//    backButton.contentEdgeInsets = UIEdgeInsetsMake(0, -35, 0, -15);
+//    backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
+//    backButton.py_width -= PYSEARCH_MARGIN;
+//    self.backButton = backButton;
+//    self.backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
     /**
      * Initialize settings
@@ -404,7 +406,7 @@
         [NSLayoutConstraint activateConstraints:@[
                                                   [searchBar.topAnchor constraintEqualToAnchor:titleView.topAnchor],
                                                   [searchBar.leftAnchor constraintEqualToAnchor:titleView.leftAnchor],
-                                                  [searchBar.rightAnchor constraintEqualToAnchor:titleView.rightAnchor constant:-PYSEARCH_MARGIN],
+                                                  [searchBar.rightAnchor constraintEqualToAnchor:titleView.rightAnchor constant:0],
                                                   [searchBar.bottomAnchor constraintEqualToAnchor:titleView.bottomAnchor]
                                                   ]];
     } else {
@@ -412,12 +414,12 @@
     }
     self.navigationItem.titleView = titleView;
     searchBar.placeholder = [NSBundle py_localizedStringForKey:PYSearchSearchPlaceholderText];
-    searchBar.backgroundImage = [NSBundle py_imageNamed:@"clearImage"];
+//    searchBar.backgroundImage = [NSBundle py_imageNamed:@"clearImage"];
     searchBar.delegate = self;
     for (UIView *subView in [[searchBar.subviews lastObject] subviews]) {
         if ([[subView class] isSubclassOfClass:[UITextField class]]) {
             UITextField *textField = (UITextField *)subView;
-            textField.font = [UIFont systemFontOfSize:16];
+            textField.font = [UIFont systemFontOfSize:14];
             _searchTextField = textField;
             break;
         }
@@ -950,6 +952,7 @@
     if (_searchViewControllerShowMode == PYSearchViewControllerShowModeModal) { // modal
         self.navigationItem.rightBarButtonItem = _cancelBarButtonItem;
         self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.hidesBackButton = YES;
     } else if (_searchViewControllerShowMode == PYSearchViewControllerShowModePush) { // push
         self.navigationItem.hidesBackButton = YES;
         self.navigationItem.leftBarButtonItem = _backBarButtonItem;
@@ -965,8 +968,8 @@
         [self.delegate didClickCancel:self];
         return;
     }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
+//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)backDidClick

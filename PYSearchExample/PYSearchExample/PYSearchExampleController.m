@@ -76,7 +76,7 @@
 //    [self presentViewController:nav animated:YES completion:nil];
     // Push
     // Set mode of show search view controller, default is `PYSearchViewControllerShowModeModal`
-    searchViewController.searchViewControllerShowMode = PYSearchViewControllerShowModePush;
+    searchViewController.searchViewControllerShowMode = PYSearchViewControllerShowModeModal;
 //    // Push search view controller
     [self.navigationController pushViewController:searchViewController animated:YES];
 }
