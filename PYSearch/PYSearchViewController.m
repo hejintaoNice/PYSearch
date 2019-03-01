@@ -424,6 +424,17 @@
             break;
         }
     }
+    
+    //2. 设置圆角和边框颜色
+    UITextField *searchField = [searchBar valueForKey:@"searchField"];
+    if (searchField) {
+        [searchField setBackgroundColor:[UIColor whiteColor]];
+        searchField.layer.cornerRadius = 2.0f;
+        searchField.layer.borderColor = PYSEARCH_COLOR(244, 244, 244).CGColor;
+        searchField.layer.borderWidth = 1;
+        searchField.layer.masksToBounds = YES;
+    }
+    
     self.searchBar = searchBar;
     
     UIView *headerView = [[UIView alloc] init];

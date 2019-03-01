@@ -60,6 +60,7 @@
         // eg：Push to a temp view controller
         [searchViewController.navigationController pushViewController:[[PYTempViewController alloc] init] animated:YES];
     }];
+    searchViewController.searchBarBackgroundColor = PYSEARCH_COLOR(244, 244, 244);
     // 3. Set style for popular search and search history
     if (0 == indexPath.section) {
         searchViewController.hotSearchStyle = (NSInteger)indexPath.row;
