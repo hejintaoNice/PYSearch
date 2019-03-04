@@ -197,7 +197,7 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 
 @end
 
-@interface PYSearchViewController : PRSuperVc
+@interface PYSearchViewController : UIViewController
 
 /**
  The delegate
