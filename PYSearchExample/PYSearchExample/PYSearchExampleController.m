@@ -62,13 +62,16 @@
     }];
     searchViewController.searchBarBackgroundColor = PYSEARCH_COLOR(244, 244, 244);
     // 3. Set style for popular search and search history
-    if (0 == indexPath.section) {
-        searchViewController.hotSearchStyle = (NSInteger)indexPath.row;
-        searchViewController.searchHistoryStyle = PYHotSearchStyleDefault;
-    } else {
-        searchViewController.hotSearchStyle = PYHotSearchStyleDefault;
-        searchViewController.searchHistoryStyle = (NSInteger)indexPath.row; 
-    }
+//    if (0 == indexPath.section) {
+//        searchViewController.hotSearchStyle = (NSInteger)indexPath.row;
+//        searchViewController.searchHistoryStyle = PYHotSearchStyleDefault;
+//    } else {
+//        searchViewController.hotSearchStyle = PYHotSearchStyleARCBorderTag;
+//        searchViewController.searchHistoryStyle = PYSearchHistoryStyleARCBorderTag;
+//    }
+    
+    searchViewController.hotSearchStyle = PYHotSearchStyleARCBorderTag;
+    searchViewController.searchHistoryStyle = PYSearchHistoryStyleARCBorderTag;
     // 4. Set delegate
     searchViewController.delegate = self;
     // 5. Present(Modal) or push search view controller

@@ -7,6 +7,7 @@
 #import "PYSearchViewController.h"
 #import "PYSearchConst.h"
 #import "PYSearchSuggestionViewController.h"
+#import "Masonry.h"
 
 #define PYRectangleTagMaxCol 3
 #define PYTextColor PYSEARCH_COLOR(113, 113, 113)
@@ -132,21 +133,9 @@
         self.cancelButtonWidth = cancelButton.py_width > self.cancelButtonWidth ? cancelButton.py_width : self.cancelButtonWidth;
         adaptWidth = self.cancelButtonWidth;
     }
-    
-    // Adapt the search bar layout problem in the navigation bar on iOS 11
-    // More details : https://github.com/iphone5solo/PYSearch/issues/108
+
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
-//        UINavigationBar *navBar = self.navigationController.navigationBar;
-//        if (self.navigationItem.rightBarButtonItem) { // Cancel button
-//            CGFloat space = 8;
-//            navBar.layoutMargins = UIEdgeInsetsZero;
-//            for (UIView *subview in navBar.subviews) {
-//                if ([NSStringFromClass(subview.class) containsString:@"ContentView"]) {
-//                    subview.layoutMargins = UIEdgeInsetsMake(0, space, 0, space); // Fix cancel button width is modified
-//                    break;
-//                }
-//            }
-//        }
+
         _searchBar.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN * 4;
         _searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
         _searchTextField.frame = _searchBar.bounds;
@@ -178,6 +167,10 @@
 {
     [super viewWillAppear:animated];
     
+    self.navigationController.navigationBar.translucent = NO;
+    [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    
     if (self.cancelButtonWidth == 0) { // Just adapt iOS 11.2
         [self viewDidLayoutSubviews];
     }
@@ -190,6 +183,8 @@
             self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
         }
     }
+//
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -430,8 +425,8 @@
     if (searchField) {
         [searchField setBackgroundColor:[UIColor whiteColor]];
         searchField.layer.cornerRadius = 2.0f;
-        searchField.layer.borderColor = PYSEARCH_COLOR(244, 244, 244).CGColor;
-        searchField.layer.borderWidth = 1;
+//        searchField.layer.borderColor = PYSEARCH_COLOR(244, 244, 244).CGColor;
+//        searchField.layer.borderWidth = 1;
         searchField.layer.masksToBounds = YES;
     }
     
@@ -938,12 +933,26 @@
             }
             break;
         case PYHotSearchStyleARCBorderTag:
-            for (UILabel *tag in self.hotSearchTags) {
-                tag.backgroundColor = [UIColor clearColor];
-                tag.layer.borderColor = PYSEARCH_COLOR(223, 223, 223).CGColor;
-                tag.layer.borderWidth = 0.5;
-                tag.layer.cornerRadius = tag.py_height * 0.5;
+            for (int i = 0; i < self.hotSearches.count; i ++) {
+                @autoreleasepool {
+                    UILabel *tagLbl = self.hotSearchTags[i];
+                    if (i == 0) {
+                        tagLbl.layer.borderColor = PYSEARCH_COLOR(0, 199, 120).CGColor;
+                    }else{
+                        tagLbl.layer.borderColor = PYSEARCH_COLOR(223, 223, 223).CGColor;
+                    }
+                    tagLbl.backgroundColor = [UIColor clearColor];
+                    tagLbl.layer.borderWidth = 0.5;
+                    tagLbl.layer.cornerRadius = tagLbl.py_height * 0.5;
+                }
+                
             }
+//            for (UILabel *tag in self.hotSearchTags) {
+//                tag.backgroundColor = [UIColor clearColor];
+//                tag.layer.borderColor = PYSEARCH_COLOR(223, 223, 223).CGColor;
+//                tag.layer.borderWidth = 0.5;
+//                tag.layer.cornerRadius = tag.py_height * 0.5;
+//            }
             break;
         case PYHotSearchStyleRectangleTag:
             self.hotSearches = self.hotSearches;
